@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { rootController } from '../controllers/rootController.js';
-import orderRouter from './orders.js';
+import ordersRouter from './orders.js';
 import { ctrlErrWrapper } from '../utils/ctrlErrWrapper.js';
 
-const router = new Router();
+const router = Router();
 
 router.get('/', ctrlErrWrapper(rootController));
-router.use('/order', orderRouter);
+router.use('/orders', ordersRouter);
 
 export default router;
