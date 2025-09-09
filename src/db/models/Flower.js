@@ -27,7 +27,10 @@ const FlowerSchema = new Schema(
       type: String,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
 
 export const Flower = model('Flower', FlowerSchema);
