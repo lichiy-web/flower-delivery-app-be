@@ -1,5 +1,4 @@
 import { Schema, model, Types } from 'mongoose';
-import { version } from 'react';
 
 const ShoppingCartSchema = new Schema(
   {

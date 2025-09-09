@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-const OrderSchema = new Schema(
+export const OrderSchema = new Schema(
   {
     shopId: {
       type: Types.ObjectId,
@@ -23,7 +23,6 @@ const OrderSchema = new Schema(
         },
         price: {
           type: Number,
-          required: true,
         },
         quantity: {
           type: Number,
@@ -58,10 +57,6 @@ const OrderSchema = new Schema(
         required: true,
       },
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
     timestamps: true,
@@ -70,3 +65,8 @@ const OrderSchema = new Schema(
 );
 
 export const Order = model('Order', OrderSchema);
+
+// console.log({
+//   tree: OrderSchema.tree,
+//   productTypes: OrderSchema.tree.items[0].productType.enum,
+// });
