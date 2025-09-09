@@ -13,6 +13,7 @@ const ShopSchema = new Schema(
     },
     description: {
       type: String,
+      maxlength: 250,
     },
     address: {
       type: String,
