@@ -11,6 +11,14 @@ const BouquetSchema = new Schema(
       type: String,
       required: true,
     },
+    colors: {
+      type: [
+        {
+          type: String,
+          enum: ['red', 'pink', 'white-pink', 'yellow', 'coral', 'peach', 'white', 'blue', 'black'],
+        },
+      ],
+    },
     description: String,
     price: {
       type: Number,
@@ -21,19 +29,23 @@ const BouquetSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    flowers: [
-      {
-        flowerId: {
-          type: Types.ObjectId,
-          ref: 'Flower',
-          required: true,
+    flowers: {
+      type: [
+        {
+          flowerId: {
+            type: Types.ObjectId,
+            ref: 'Flower',
+            required: true,
+          },
+          quantity: {
+            type: Number,
+            required: true,
+          },
         },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+      ],
+      required: false,
+      default: undefined,
+    },
   },
   {
     timestamps: true,

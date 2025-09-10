@@ -7,9 +7,29 @@ const FlowerSchema = new Schema(
       ref: 'Shop',
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
+    },
+    color: {
+      type: String,
+      enum: [
+        'red',
+        'pink',
+        'white-pink',
+        'yellow',
+        'orange',
+        'coral',
+        'peach',
+        'white',
+        'blue',
+        'purple',
+        'black',
+      ],
     },
     description: {
       type: String,
@@ -25,6 +45,9 @@ const FlowerSchema = new Schema(
     },
     photoUrl: {
       type: String,
+    },
+    isFavourite: {
+      type: Boolean,
     },
   },
   {
