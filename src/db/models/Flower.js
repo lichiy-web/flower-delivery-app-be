@@ -7,8 +7,26 @@ const FlowerSchema = new Schema(
       ref: 'Shop',
       required: true,
     },
-    category: {
+    type: {
       type: String,
+      enum: ['single', 'bouquet'],
+      default: 'single',
+    },
+    categories: {
+      type: [String],
+      validate: {
+        validator: function (arr) {
+          // single flower only requires one category: rose, tulip etc
+          if (this.type === 'single') return arr.length === 1;
+          // bouquet requires at least 1 category
+          if (this.type === 'bouquet') return arr.length >= 1;
+        },
+        message: function () {
+          return this.type === 'single'
+            ? 'Flower only requires one category'
+            : 'Bouquet requires at least 1 category';
+        },
+      },
       required: true,
     },
     name: {
@@ -41,7 +59,7 @@ const FlowerSchema = new Schema(
     },
     stock: {
       type: Number,
-      default: 0,
+      required: true,
     },
     photoUrl: {
       type: String,
