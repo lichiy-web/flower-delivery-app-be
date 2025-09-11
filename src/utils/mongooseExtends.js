@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export class MogooseStaticMethods {
+export class MongooseStaticMethods {
   static async findWithMeta(ids) {
     const objectIds = ids.map(id => new Types.ObjectId(id));
     const docs = await this.find({ _id: { $in: objectIds } });

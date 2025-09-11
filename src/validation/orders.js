@@ -52,25 +52,52 @@ export const createOrderSchema = Joi.object({
   }),
 });
 
-// const testOrder = {
-//   shopId: '67f6364eeba7c0aedb007d73',
-//   items: [
-//     {
-//       productType: 'flower',
-//       productId: '67f6381e907fe15ef69f1df4',
-//       name: 'rose',
-//       price: 10,
-//       quantity: 3,
-//     },
-//   ],
-//   totalAmount: 10,
-//   status: 'pending',
-//   deliveryTo: {
-//     name: 'Jhon Dow',
-//     email: 'jhon.dow@yahoo.com',
-//     phone: '+380506352410',
-//     address: 'Kharkiv, Main st, 6',
-//   },
-// };
-
-// console.log(orderAddSchema.validate(testOrder));
+export const updateOrderSchema = Joi.object({
+  shopId: Joi.string()
+    .custom(idValidatorFactory('custom.shopId.invalid'), 'Validate shopId!')
+    .messages({
+      'custom.shopId.invalid': 'Invalid shopId!',
+    }),
+  items: Joi.array().items(
+    Joi.object({
+      type: Joi.string()
+        .valid(...PRODUCT_TYPES)
+        .messages({
+          'any.only': `Product type must only be one of [${PRODUCT_TYPES.join(', ')}]`,
+        }),
+      productId: Joi.string()
+        .custom(idValidatorFactory('custom.productId.invalid'), 'Validate productId!')
+        .messages({
+          'custom.productId.invalid': 'Invalid productId!',
+        }),
+      _id: Joi.string()
+        .custom(idValidatorFactory('custom.itemId.invalid'), 'Validate itemId!')
+        .required()
+        .messages({
+          'custom.itemId.invalid': 'Invalid itemId!',
+        }),
+      name: Joi.string(),
+      price: Joi.number(),
+      quantity: Joi.number().min(1).messages({
+        'number.min': 'Quantity of flowers in a bouquet must be greater than 0',
+      }),
+    })
+      .or('_id, productId')
+      .messages({
+        'object.missing': 'Each item must contain at least one of the fields: _id or productId',
+      }),
+  ),
+  totalAmount: Joi.number(),
+  status: Joi.string()
+    .valid(...STATUS_LIST)
+    .messages({
+      'any.only': `Product type must only be one of [${STATUS_LIST.join(', ')}]`,
+    }),
+  orderedAt: Joi.date().iso(),
+  deliveryTo: Joi.object({
+    name: Joi.string(),
+    email: Joi.string(),
+    phone: Joi.string(),
+    address: Joi.string(),
+  }),
+});

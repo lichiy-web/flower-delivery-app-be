@@ -4,6 +4,7 @@ import { Order } from '../db/models/Order.js';
 import createHttpError from 'http-errors';
 
 export const createOrder = async order => {
+  // Doubled productIds are allowed, each item is considered as independent one
   const productIdList = order.items.map(({ productId }) => productId);
   const {
     found: orderedFlowers,
@@ -32,4 +33,26 @@ export const createOrder = async order => {
   return newOrder;
 };
 
-export const fetchOrderById = ({ orderId }) => Order.findOne({ _id: orderId });
+export const updateOrderById = async ({ orderId, orderUpdates }) => {
+  const order = await fetchOrderById({ orderId });
+
+  if (orderUpdates?.items?.length) {
+    const itemIdList = orderUpdates.items.map(({ _id }) => _id);
+    const {
+      found: orderedFlowers,
+      missing: missingIds,
+      totalMissing,
+    } = await Flower.findWithMeta(productIdList);
+    if (totalMissing > 0) {
+      throw createHttpError(404, RES_MSG[404].noProducts(missingIds));
+    }
+  }
+};
+
+export const fetchOrderById = async ({ orderId }) => {
+  const order = await Order.findOne({ _id: orderId });
+  if (!order) {
+    throw createHttpError(404, RES_MSG[404].noEntity('Order', orderId));
+  }
+  return order;
+};
