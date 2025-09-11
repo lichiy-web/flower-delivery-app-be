@@ -9,10 +9,9 @@ export const OrderSchema = new Schema(
     },
     items: [
       {
-        productType: {
+        type: {
           type: String,
-          enum: ['flower', 'bouquet'],
-          required: true,
+          enum: ['single', 'bouquet'],
         },
         productId: {
           type: Types.ObjectId,
@@ -38,6 +37,10 @@ export const OrderSchema = new Schema(
       type: String,
       enum: ['pending', 'confirmed', 'delivering', 'completed', 'canceled'],
       default: 'pending',
+    },
+    orderedAt: {
+      type: Date,
+      required: true,
     },
     deliveryTo: {
       name: {

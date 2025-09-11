@@ -1,4 +1,5 @@
 import { Schema, Types, model } from 'mongoose';
+import { MogooseStaticMethods } from '../../utils/mongooseExtends.js';
 
 const FlowerSchema = new Schema(
   {
@@ -73,5 +74,7 @@ const FlowerSchema = new Schema(
     versionKey: false,
   },
 );
+
+FlowerSchema.statics.findWithMeta = MogooseStaticMethods.findWithMeta;
 
 export const Flower = model('Flower', FlowerSchema);

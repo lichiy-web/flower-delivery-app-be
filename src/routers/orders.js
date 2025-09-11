@@ -1,17 +1,18 @@
 import { Router } from 'express';
 import {
   createOrderController,
-  getAllOrdersController,
   getOrderController,
   updateOrderController,
 } from '../controllers/orders.js';
 import { ctrlErrWrapper } from '../utils/ctrlErrWrapper.js';
+import { createOrderSchema } from '../validation/orders.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { isValidIdFactory } from '../middlewares/isValidIdFactory.js';
 
 const router = Router();
 
-router.get('/', ctrlErrWrapper(getAllOrdersController));
-router.get('/:orderId', ctrlErrWrapper(getOrderController));
-router.post('/', ctrlErrWrapper(createOrderController));
+router.get('/:orderId', isValidIdFactory('orderId'), ctrlErrWrapper(getOrderController));
+router.post('/', validateBody(createOrderSchema), ctrlErrWrapper(createOrderController));
 router.patch('/', ctrlErrWrapper(updateOrderController));
 
 export default router;

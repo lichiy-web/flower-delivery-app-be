@@ -7,6 +7,15 @@ export const RES_MSG = {
     invalidId: (idParamName, id) => `The following id {${idParamName}: ${id}} is not valid`,
   },
   401: { default: 'Unauthorized' },
-  404: { default: 'Rout not found!' },
+  404: {
+    default: 'Rout not found!',
+    noProducts: ids => `Products with IDs: ${ids.join(', ')} not found!`,
+    noEntity: (entityName, entityId) => `${entityName} with ID: ${entityId} not found!`,
+  },
+  409: {
+    default: 'Conflict!',
+    insufficientStockOf: (itemName, itemId) =>
+      `Insufficient stock of ${itemName} with ID: ${itemId}.`,
+  },
   500: { default: 'Internal Server Error' },
 };

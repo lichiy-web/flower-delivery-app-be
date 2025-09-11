@@ -2,10 +2,10 @@ import Joi from 'joi';
 import { idValidatorFactory } from '../utils/isValidMongoId.js';
 import { OrderSchema } from '../db/models/Order.js';
 
-const PRODUCT_TYPES = OrderSchema.tree.items[0].productType.enum;
+const PRODUCT_TYPES = OrderSchema.tree.items[0].type.enum;
 const STATUS_LIST = OrderSchema.tree.status.enum;
 
-export const orderAddSchema = Joi.object({
+export const createOrderSchema = Joi.object({
   shopId: Joi.string()
     .custom(idValidatorFactory('custom.shopId.invalid'), 'Validate shopId!')
     .required()
@@ -16,13 +16,10 @@ export const orderAddSchema = Joi.object({
     }),
   items: Joi.array().items(
     Joi.object({
-      productType: Joi.string()
+      type: Joi.string()
         .valid(...PRODUCT_TYPES)
-        .required()
         .messages({
           'any.only': `Product type must only be one of [${PRODUCT_TYPES.join(', ')}]`,
-          'string.empty': 'Product type is required',
-          'any.required': 'Product type is required',
         }),
       productId: Joi.string()
         .custom(idValidatorFactory('custom.productId.invalid'), 'Validate productId!')
@@ -46,6 +43,7 @@ export const orderAddSchema = Joi.object({
     .messages({
       'any.only': `Product type must only be one of [${STATUS_LIST.join(', ')}]`,
     }),
+  orderedAt: Joi.date().iso().required(),
   deliveryTo: Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
