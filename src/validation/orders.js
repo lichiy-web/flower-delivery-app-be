@@ -1,4 +1,7 @@
-import Joi from 'joi';
+import baseJoi from 'joi';
+import JoiTzExtention from 'joi-tz';
+const Joi = baseJoi.extend(JoiTzExtention);
+
 import { idValidatorFactory } from '../utils/isValidMongoId.js';
 import { OrderSchema } from '../db/models/Order.js';
 
@@ -43,7 +46,7 @@ export const createOrderSchema = Joi.object({
     .messages({
       'any.only': `Product type must only be one of [${STATUS_LIST.join(', ')}]`,
     }),
-  orderedAt: Joi.date().iso().required(),
+  timeZone: Joi.string().tz().required(),
   deliveryTo: Joi.object({
     name: Joi.string().required(),
     email: Joi.string().required(),
@@ -93,11 +96,17 @@ export const updateOrderSchema = Joi.object({
     .messages({
       'any.only': `Product type must only be one of [${STATUS_LIST.join(', ')}]`,
     }),
-  orderedAt: Joi.date().iso(),
   deliveryTo: Joi.object({
     name: Joi.string(),
     email: Joi.string(),
     phone: Joi.string(),
     address: Joi.string(),
   }),
+  remove: Joi.array().items(
+    Joi.string()
+      .custom(idValidatorFactory('custom.itemId.invalid'), 'Validate itemId in the remove list!')
+      .messages({
+        'custom.itemI.invalid': 'Invalid itemId in the remove list!',
+      }),
+  ),
 });

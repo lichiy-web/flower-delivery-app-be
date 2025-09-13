@@ -37,6 +37,19 @@ export const updateOrderById = async ({ orderId, orderUpdates }) => {
   const order = await fetchOrderById({ orderId });
 
   if (orderUpdates?.items?.length) {
+    // Cases with order.items content:
+    // 1. item has both item._id and item.productId
+    //   Actions:
+    //     - Check out if productId correspond to item._id, if not throw exception with 409 response code
+    //   If client wants to change some positions in the order, it should remove with remove property in the order
+    //   that consist array of item._id to remove them from the data base
+    // 2. item only has item._id
+    //   Actions:
+    //     - All items with item._id should be fetched and updated with orderUpdates.items.item._id data
+    // 3. item only has item.productId
+    //   Actions
+    //     - The new item should be created in the order
+
     const itemIdList = orderUpdates.items.map(({ _id }) => _id);
     const {
       found: orderedFlowers,
